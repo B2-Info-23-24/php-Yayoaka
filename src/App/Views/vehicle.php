@@ -23,28 +23,38 @@
 
     <hr>
     <h2> Réservation : </h2>
-    <form action="action.php?do=searchdate" method="get">
+    <form action="action.php" method="get">
+        <input type="hidden" name="do" value="searchdate">
         <label for="month">Month :</label>
         <?php
-
-        $currDate = date("Y-n");
+        $currDate = date("Y-m");
+        $selectedDate = $currDate;
+        if (isset($_GET["month"])) :
+            $selectedDate = $_GET["month"];
+        endif;
         ?>
+
         <select name="month">
             <?php
             $startDate = $currDate;
             for ($i = 0; $i < 6; $i++) :
-                $newDate = date("Y-n",  strtotime($startDate));
+                $isSelected = "";
+                $newDate = date("Y-m",  strtotime($startDate));
                 $labelDate = date("F Y",  strtotime($startDate));
+                if ($newDate == $selectedDate) :
+                    $isSelected = "selected";
+                endif;
             ?>
-                <option value="<?= $newDate ?>"><?= $labelDate ?></option>
+                <option value="<?= $newDate ?>" <?= $isSelected ?>><?= $labelDate ?></option>
             <?php
                 // passer au mois suivant
-                $startDate = date('Y-n', strtotime("+1 months", strtotime($newDate)));
+                $startDate = date('Y-m', strtotime("+1 months", strtotime($newDate)));
             endfor; ?>
         </select>
         <input type="submit" value="Search Free Date">
+        <a href="action.php?do=searchdate&id=<?= $currVehic["id"] ?>&month=<?= $selectedDate ?>">Search Free Date</a>
 
-        <input type="hidden" name="idVehicle" value="<?= $currVehic["id"] ?>">
+        <input type="hidden" name="id" value="<?= $currVehic["id"] ?>">
     </form>
 
     <!-- =================DATES DISPO======================================= -->
@@ -53,10 +63,9 @@
             <tbody>
                 <tr>
                     <?php
-                    $tNotFree = array(5, 12, 13, 14, 15, 24);
-
-                    $currMonth = date("n", strtotime($currDate));
-                    $curYear = date("Y", strtotime($currDate));
+                    var_dump($tNotFree);
+                    $currMonth = date("n", strtotime($selectedDate));
+                    $curYear = date("Y", strtotime($selectedDate));
                     $nbMaxDays = cal_days_in_month(CAL_GREGORIAN, $currMonth, $curYear);
                     for ($i = 1; $i <= $nbMaxDays; $i++) :
                         $bgColor = "green";
@@ -69,7 +78,7 @@
 
                         <td width='7%' style='background-color:<?= $bgColor ?>'>
                             <?= $chkBx ?>
-                            <?= $i ?> <?= date("M", strtotime($currDate)) ?>
+                            <?= $i ?> <?= date("M", strtotime($selectedDate)) ?>
                         </td>
 
                     <?php
@@ -84,8 +93,8 @@
             </tbody>
         </table>
         <input type="submit" value="Reservation">
-        <input type="hidden" name="idVehicle" value="<?= $currVehic["id"] ?>">
-        <input type="hidden" name="month" value="2023-12">
+        <input type="hidden" name="id" value="<?= $currVehic["id"] ?>">
+        <input type="hidden" name="month" value="<?= $selectedDate ?>">
     </form>
 
 

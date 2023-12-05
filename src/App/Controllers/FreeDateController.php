@@ -8,21 +8,31 @@ namespace App\Controllers;
  */
 class FreeDateController
 {
-    private $model;
+    private $modelVehicle;
+    private $modelDates;
 
-    public function __construct($model)
+    public function __construct($modelVehicle, $modelDates)
     {
-        $this->model = $model;
+        $this->modelVehicle = $modelVehicle;
+        $this->modelDates = $modelDates;
     }
 
     public function getFreeDates($currMonth, $idVehicle): array
     {
-        $tFreeDatas = $this->model->getFreeDates($currMonth, $idVehicle);
+        $tFreeDatas = $this->modelDates->getNotFreeDates($currMonth, $idVehicle);
         return $tFreeDatas;
     }
 
     public function display($tNotFree, $idVehicle, $dateMonth)
     {
-        // TODO Header vers la page du produit
+        $currVehic = array();
+        if ($idVehicle > 0) {
+            $currVehic = $this->modelVehicle->getVehicle($idVehicle);
+        } else {
+            echo "Error vehicle #" . $idVehicle . " not found";
+            return;
+        }
+
+        require(dirname(__DIR__) . "/Views/vehicle.php");
     }
 }

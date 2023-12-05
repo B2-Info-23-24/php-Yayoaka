@@ -67,7 +67,10 @@
     if (isset($_GET["filterp"])) :
       $filterPlace = $_GET["filterp"];
     endif;
+    // echo "filter : " . $filterPlace;
+    // var_dump($_GET);
     ?>
+
     <label for="filterp">Place :</label>
     <select name="filterp">
       <option value="0">- Choose a place -</option>
@@ -88,7 +91,7 @@
     endif;
     ?>
     <label for="filterp">Color :</label>
-    <select name="filterp">
+    <select name="filterc">
       <option value="0">- Choose a place -</option>
       <?php foreach ($tPlaces as $place) :
         $isSelected = "";
@@ -107,7 +110,7 @@
     endif;
     ?>
     <label for="filterp">Price :</label>
-    <select name="filterp">
+    <select name="filterpr">
       <option value="0">- Choose a price -</option>
       <option value="10000">entre 0 et 10 000</option>
       <option value="20000">entre 10 000 et 20 000</option>
@@ -133,7 +136,7 @@
       foreach ($datas as $vehicle) : ?>
         <tr>
           <td>
-            - <a href="action.php?do=showproduct&id=<?= $vehicle["id"] ?>"> <?= $vehicle["name_brand"] ?></a>
+            - <a href="action.php?do=searchdate&id=<?= $vehicle["id"] ?>"> <?= $vehicle["name_brand"] ?></a>
           </td>
           <td>
             <?= $vehicle["name_model"] ?>

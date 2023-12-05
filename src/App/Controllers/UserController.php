@@ -66,4 +66,16 @@ class UserController
         }
         require(dirname(__DIR__) . "/Views/userBO.php");
     }
+    public function displayUserFront($id)
+    {
+        $currUser = array();
+        if ($id > 0) {
+            $currUser = $this->model->getUserConnected($id);
+        } else {
+            echo "Error user #" . $id . " not found";
+            return;
+        }
+
+        require(dirname(__DIR__) . "/Views/user.php");
+    }
 }

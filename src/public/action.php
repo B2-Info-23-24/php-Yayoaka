@@ -46,6 +46,8 @@ if (isset($_GET['do'])) {
 }
 
 
+
+
 //if (isset($_GET['do']) && $_GET['do'] != "") {
 switch ($currAction) {
 	case "brands":
@@ -190,27 +192,32 @@ switch ($currAction) {
 		$tDatas = $ctrlVehicles->getAllData();
 		$ctrlVehicles->displayFront($tDatas);
 		break;
-	case "showproduct":
-		$modelVehicle = new VehicleModel($pdo);
-		$ctrlVehicle = new VehicleController($modelVehicle);
-		$idVehicle = $_GET['id'];
-		$ctrlVehicle->displayVehicleFront($idVehicle);
-		break;
+		// case "showproduct":
+		// 	$modelVehicle = new VehicleModel($pdo);
+		// 	$ctrlVehicle = new VehicleController($modelVehicle);
+		// 	$idVehicle = $_GET['id'];
+		// 	$ctrlVehicle->displayVehicleFront($idVehicle);
+		// 	break;
 	case "searchdate":
-		$modelVehicle = new FreeDateModel($pdo);
-		$ctrlVehicle = new FreeDateController($modelVehicle);
+		$modelVehicle = new VehicleModel($pdo);
+		$modelNotFreeDate = new FreeDateModel($pdo);
+		$ctrlVehicle = new FreeDateController($modelVehicle, $modelNotFreeDate);
 		$idVehicle = $_GET['id'];
-		$dateMonth = $_GET['month'];
+		$dateMonth = date("Y-m");
+		var_dump($_GET);
+		if (isset($_GET['month'])) {
+			$dateMonth = $_GET['month'];
+		}
 		$tNotFree = $ctrlVehicle->getFreeDates($dateMonth, $idVehicle);
 		$ctrlVehicle->display($tNotFree, $idVehicle, $dateMonth);
 		break;
 	case "reservation":
 		$modelVehicle = new ReservationModel($pdo);
 		$ctrlVehicle = new ReservationController($modelVehicle);
-		$idVehicle = $_POST['idVehicle'];
+		$idVehicle = $_POST['id'];
 		$dateMonth = $_POST['month'];
 		$tResaDays = $_POST['resa_days'];
-		// var_dump($tResaDays);
+		var_dump($_POST);
 		$ctrlVehicle->saveReservations($idVehicle,  $dateMonth, $tResaDays);
 		$ctrlVehicle->display($idVehicle, $dateMonth, $tResaDays); // view ORDER
 		break;

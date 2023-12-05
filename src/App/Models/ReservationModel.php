@@ -28,6 +28,7 @@ class ReservationModel
             $stmt->bindParam(':idBrand', $idBrand);
             $stmt->bindParam(':idPlaces', $idPlaces);
             $stmt->bindParam(':idColor', $idColor);
+            $stmt->debugDumpParams();
             // return $stmt->execute();
         } catch (PDOException $e) {
             die("Erreur lors de l'exécution de la requête : " . $e->getMessage());

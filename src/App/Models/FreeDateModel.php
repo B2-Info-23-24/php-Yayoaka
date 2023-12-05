@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use PDO;
+use DateTime;
 use PDOException;
 
 /**
@@ -17,23 +18,34 @@ class FreeDateModel
         $this->pdo = $pdo;
     }
 
-    public function getFreeDates($date, $vehicle)
+    public function getNotFreeDates($date, $vehicle)
     {
         $queryContents = "SELECT date_begin, date_end FROM Reservation WHERE id_vehicle = " . $vehicle . " AND date_begin
         LIKE '" . $date . "%' ORDER BY date_begin ASC";
 
-        $tFreeDates = array();
+        $tNotFreeDates = array();
 
         try {
             $stmt = $this->pdo->query($queryContents);
-            $tFreeDates = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            // $stmt->debugDumpParams();
+            $tNotFreeDates = $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             die("Erreur lors de l'exécution de la requête : " . $e->getMessage());
         }
-
+        $tResaMonth = array();
         // TODO algo construction table free date
-        // Foreach ...
+        foreach ($tNotFreeDates as $date) {
+            $dtDate1 = DateTime::createFromFormat('Y-m-d', $date["date_begin"]);
+            $sDate1 = $dtDate1->format("j");
 
-        return $tFreeDates;
+            $dtDate2 = DateTime::createFromFormat('Y-m-d', $date["date_end"]);
+            $sDate2 = $dtDate2->format("j");
+
+            for ($i = $sDate1; $i <= $sDate2; $i++) {
+                $tResaMonth[] = $i;
+            }
+        }
+
+        return $tResaMonth;
     }
 }

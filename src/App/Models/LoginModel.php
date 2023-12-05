@@ -18,6 +18,7 @@ class LoginModel
         try {
             $password = md5($password);
             $stmt = $this->pdo->query("SELECT id, admin FROM user WHERE name = '" . $name . "' AND password = '" . $password . "'");
+            // echo $stmt->debugDumpParams();
             $rows = $stmt->fetchAll();
             $idUser = $rows[0]['id'];
             $admin = $rows[0]['admin'];

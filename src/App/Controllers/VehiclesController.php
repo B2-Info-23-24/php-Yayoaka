@@ -32,7 +32,7 @@ class VehiclesController
         if (isset($_GET["filterp"])) :
             $this->filterPlace = $_GET["filterp"];
         endif;
-        echo "fiterp  : " . $this->filterPlace;
+        // echo "fiterp  : " . $this->filterPlace;
     }
 
     public function getAllData(): array
@@ -56,12 +56,10 @@ class VehiclesController
     public function display($datas)
     {
         require(dirname(__DIR__) . "/Views/vehiclesBO.php");
-        //FIXME : a remplacer par un appel de templating TWIG !
     }
 
     public function displayFront($datas, $tBrands = null, $tPlaces = null)
     {
         require(dirname(__DIR__) . "/../public/indexfront.php");
-        //FIXME : a remplacer par un appel de templating TWIG !
     }
 }
