@@ -19,7 +19,7 @@ class VehiclesModel
         $this->pdo = $pdo;
     }
 
-    public function getVehicles($filterBrand = null, $filterPlace = null)
+    public function getVehicles($filterBrand = null, $filterPlace = null,  $filterColor = null, $filterPrice = null)
     {
         $tWhere = array();
         if ($filterBrand) {
@@ -28,8 +28,20 @@ class VehiclesModel
         if ($filterPlace) {
             $tWhere[] = "id_nb_place=" . $filterPlace;
         }
+        if ($filterColor) {
+            $tWhere[] = "id_color=" . $filterColor;
+        }
+        if ($filterPrice) {
+            $tPrices = explode("::", $filterPrice);
+            if (isset($tPrices[0])) {
+                $tWhere[] = "price>" . $tPrices[0];
+            }
+            if (isset($tPrices[1])) {
+                $tWhere[] = "price<=" . $tPrices[1];
+            }
+        }
 
-        // var_dump($tWhere);
+        var_dump($tWhere);
         $sWheres = "";
         if (count($tWhere) > 0) {
             $sWheres = implode(" AND ", $tWhere);

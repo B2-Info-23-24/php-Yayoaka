@@ -66,15 +66,17 @@ class UserController
         }
         require(dirname(__DIR__) . "/Views/userBO.php");
     }
-    public function displayUserFront($id)
+
+    public function getUserFav()
+    {
+        $tFavs = $this->model->getUserFav();
+        return $tFavs;
+    }
+
+    public function displayUserFront($tMyResas, $tMyFav)
     {
         $currUser = array();
-        if ($id > 0) {
-            $currUser = $this->model->getUserConnected($id);
-        } else {
-            echo "Error user #" . $id . " not found";
-            return;
-        }
+        $currUser = $this->model->getUserConnected();
 
         require(dirname(__DIR__) . "/Views/user.php");
     }

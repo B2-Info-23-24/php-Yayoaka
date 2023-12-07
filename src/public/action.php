@@ -2,6 +2,7 @@
 require '../vendor/autoload.php';
 
 use App\Core\Config;
+use App\Models\FavModel;
 use App\Models\UserModel;
 use App\Models\BrandModel;
 use App\Models\ColorModel;
@@ -15,6 +16,7 @@ use App\Models\VehicleModel;
 use App\Models\FreeDateModel;
 use App\Models\VehiclesModel;
 use App\Models\ReservationModel;
+use App\Controllers\FavController;
 use App\Controllers\UserController;
 use App\Controllers\BrandController;
 use App\Controllers\ColorController;
@@ -178,12 +180,14 @@ switch ($currAction) {
 		$modelVehicles = new VehiclesModel($pdo);
 		$modelBrand = new BrandsModel($pdo);
 		$modelPlace = new PlacesModel($pdo);
-		$ctrlVehicles = new VehiclesController($modelVehicles, $modelBrand, $modelPlace);
+		$modelColor = new ColorsModel($pdo);
+		$ctrlVehicles = new VehiclesController($modelVehicles, $modelBrand, $modelPlace, $modelColor);
 		$ctrlVehicles->getFilters();
 		$tDatas = $ctrlVehicles->getAllData();
 		$tBrands = $ctrlVehicles->getAllBrands();
 		$tPlaces = $ctrlVehicles->getAllPlaces();
-		$ctrlVehicles->displayFront($tDatas, $tBrands, $tPlaces);
+		$tColors = $ctrlVehicles->getAllColors();
+		$ctrlVehicles->displayFront($tDatas, $tBrands, $tPlaces, $tColors);
 		break;
 
 	case "products":
@@ -204,7 +208,7 @@ switch ($currAction) {
 		$ctrlVehicle = new FreeDateController($modelVehicle, $modelNotFreeDate);
 		$idVehicle = $_GET['id'];
 		$dateMonth = date("Y-m");
-		var_dump($_GET);
+		//var_dump($_GET);
 		if (isset($_GET['month'])) {
 			$dateMonth = $_GET['month'];
 		}
@@ -212,14 +216,27 @@ switch ($currAction) {
 		$ctrlVehicle->display($tNotFree, $idVehicle, $dateMonth);
 		break;
 	case "reservation":
-		$modelVehicle = new ReservationModel($pdo);
-		$ctrlVehicle = new ReservationController($modelVehicle);
+		$modelVehicle = new VehicleModel($pdo);
+		$modelResa = new ReservationModel($pdo, $modelVehicle);
+		$ctrlResa = new ReservationController($modelResa, $modelVehicle);
 		$idVehicle = $_POST['id'];
 		$dateMonth = $_POST['month'];
 		$tResaDays = $_POST['resa_days'];
+		//var_dump($_POST);
+		$ctrlResa->saveReservations($idVehicle,  $dateMonth, $tResaDays);
+		$ctrlResa->display($idVehicle, $dateMonth, $tResaDays);
+		break;
+	case "payment":
+		$modelResa = new ReservationModel($pdo);
+		$ctrlResa = new ReservationController($modelResa);
+		$tResaIds = $_POST['resa_ids'];
 		var_dump($_POST);
-		$ctrlVehicle->saveReservations($idVehicle,  $dateMonth, $tResaDays);
-		$ctrlVehicle->display($idVehicle, $dateMonth, $tResaDays); // view ORDER
+		$ctrlResa->updResasState($tResaIds, 1);
+		// renvoi a MyAccount
+		$modelUser = new UserModel($pdo);
+		$ctrlUser = new UserController($modelUser);
+		$tMyResas = $ctrlResa->getUserResas();
+		$ctrlUser->displayUserFront($tMyResas);
 		break;
 
 	case "login":
@@ -236,8 +253,26 @@ switch ($currAction) {
 	case "showfrontuser":
 		$modelUser = new UserModel($pdo);
 		$ctrlUser = new UserController($modelUser);
-		$idUser = $_GET['id'];
-		$ctrlUser->displayUserFront($idUser);
+		//$idUser = $_GET['id'];
+		$modelResa = new ReservationModel($pdo);
+		$ctrlResa = new ReservationController($modelResa);
+		$tMyResas = $ctrlResa->getUserResas();
+		$tMyFav = $ctrlUser->getUserFav();
+		$ctrlUser->displayUserFront($tMyResas, $tMyFav);
+		break;
+
+	case "addfav":
+		$modelFav = new FavModel($pdo);
+		$ctrlFav = new FavController($modelFav);
+		$idVehicle = $_GET['id'];
+		$ctrlFav->AddFav($idVehicle);
+		$modelResa = new ReservationModel($pdo);
+		$ctrlResa = new ReservationController($modelResa);
+		$tMyResas = $ctrlResa->getUserResas();
+		$modelUser = new UserModel($pdo);
+		$ctrlUser = new UserController($modelUser);
+		$tMyFav = $ctrlUser->getUserFav();
+		$ctrlUser->displayUserFront($tMyResas, $tMyFav);
 		break;
 
 	default:

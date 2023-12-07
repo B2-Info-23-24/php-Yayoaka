@@ -14,30 +14,25 @@
     td {
       text-align: center;
     }
+
+    td.col1 {
+      text-align: left;
+      padding-left: 20px;
+    }
+
+    .coltitle {
+      font-size: 14pt;
+      font-weight: bold;
+    }
   </style>
 </head>
 
 
 <body>
 
-  <h1> Page d'accueil</h1>
-  <?php
-  if (isset($_SESSION['user_logged'])) :
-  ?>
-    <a href="action.php?do=showfrontuser">User</a> -
-    <a href="action.php?do=logout">Logout</a>
+  <?php include "header.php" ?>
 
-    <?php
-    if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 1) :
-    ?>
-      - <a href="indexadmin.php">gestion Admin</a> <br /> <!-- acces admin uniquement si user > admin=1 -->
-    <?php endif; ?>
-    <br /> <br />
-
-  <?php else : ?>
-    <a href="loginuser.php">Login</a> <br /> <br />
-  <?php endif; ?>
-
+  <h1>Search your car</h1>
 
   <form action="action.php" method="get">
     <input type="hidden" name="do" value="filtervehicles" />
@@ -71,7 +66,7 @@
     // var_dump($_GET);
     ?>
 
-    <label for="filterp">Place :</label>
+    &nbsp; <label for="filterp">Place :</label>
     <select name="filterp">
       <option value="0">- Choose a place -</option>
       <?php foreach ($tPlaces as $place) :
@@ -85,61 +80,70 @@
     </select>
 
     <?php // creation filtre color 
-    $filterPlace = 0;
-    if (isset($_GET["filterp"])) :
-      $filterPlace = $_GET["filterp"];
+    $filterColor = 0;
+    if (isset($_GET["filterc"])) :
+      $filterColor = $_GET["filterc"];
     endif;
     ?>
-    <label for="filterp">Color :</label>
+    &nbsp; <label for="filterc">Color :</label>
     <select name="filterc">
-      <option value="0">- Choose a place -</option>
-      <?php foreach ($tPlaces as $place) :
+      <option value="0">- Choose a color -</option>
+      <?php foreach ($tColors as $color) :
         $isSelected = "";
-        if ($place["id"] == $filterPlace) :
+        if ($color["id"] == $filterColor) :
           $isSelected = "selected";
         endif;
       ?>
-        <option value="<?= $place["id"] ?>" <?= $isSelected ?>><?= $place["nb_places"] ?></option>
+        <option value="<?= $color["id"] ?>" <?= $isSelected ?>><?= $color["name_color"] ?></option>
       <?php endforeach; ?>
     </select>
 
     <?php // creation filtre Price 
-    $filterPlace = 0;
-    if (isset($_GET["filterp"])) :
-      $filterPlace = $_GET["filterp"];
+    $filterPrice = 0;
+    $tSelected = array(
+      "0::40" => "", "40::60" => "", "60::80" => "",
+      "80::100" => "", "100::120" => "", "120::999" => ""
+    );
+    if (isset($_GET["filterpr"])) :
+      $filterPrice = $_GET["filterpr"];
+      if (isset($tSelected[$filterPrice])) :
+        $tSelected[$filterPrice] = "selected";
+      endif;
     endif;
     ?>
-    <label for="filterp">Price :</label>
+    &nbsp; <label for="filterp">Price :</label>
     <select name="filterpr">
       <option value="0">- Choose a price -</option>
-      <option value="10000">entre 0 et 10 000</option>
-      <option value="20000">entre 10 000 et 20 000</option>
-      <option value="100000">entre 0 et 10000</option>
-      <option value="100000">entre 0 et 10000</option>
-      <option value="100000">entre 0 et 10000</option>
-      <option value="max">supérieru à 50 000</option>
+      <option value="0::40" <?= $tSelected["0::40"] ?>>from 0 to 40</option>
+      <option value="40::60" <?= $tSelected["40::60"] ?>>from 40 to 60</option>
+      <option value="60::80" <?= $tSelected["60::80"] ?>>from 60 to 80</option>
+      <option value="80::100" <?= $tSelected["80::100"] ?>>from 80 to 100</option>
+      <option value="100::120" <?= $tSelected["100::120"] ?>>from 100 to 120</option>
+      <option value="120::999" <?= $tSelected["120::999"] ?>>more than 120</option>
     </select>
 
-    <button type="submit">Filter</button>
+    &nbsp; <button type="submit">Filter</button>
   </form>
+  <br />
 
   <table>
     <thead>
-      <th width="20%">Marque</th>
-      <th width="20%">Model</th>
+      <th width="18%">Marque</th>
+      <th width="18%">Model</th>
       <th width="10%">Nb places</th>
-      <th width="20%">Color</th>
+      <th width="18%">Color</th>
       <th width="20%">Price</th>
+      <th width="20%">[Action]</th>
     </thead>
     <tbody>
       <?php // chargment liste des vehicules
       foreach ($datas as $vehicle) : ?>
         <tr>
-          <td>
-            - <a href="action.php?do=searchdate&id=<?= $vehicle["id"] ?>"> <?= $vehicle["name_brand"] ?></a>
+          <td class="col1 coltitle">
+            - <a href="action.php?do=searchdate&id=<?= $vehicle["id"] ?>"><?= $vehicle["name_brand"] ?></a>
           </td>
-          <td>
-            <?= $vehicle["name_model"] ?>
+          <td class="coltitle">
+            <a href="action.php?do=searchdate&id=<?= $vehicle["id"] ?>"><?= $vehicle["name_model"] ?></a>
           </td>
           <td>
             <?= $vehicle["nb_places"] ?>
@@ -148,7 +152,12 @@
             <?= $vehicle["name_color"] ?>
           </td>
           <td>
-            <?= $vehicle["price"] ?> €
+            <?= $vehicle["price"] ?> €/day
+          </td>
+          <td>
+            <?php if (isset($_SESSION['user_logged'])) : ?>
+              <a href="action.php?do=addfav&id=<?= $vehicle["id"] ?>">Add to favorites</a>
+            <?php endif; ?>
           </td>
         </tr>
       <?php endforeach; ?>
@@ -156,15 +165,12 @@
   </table>
 
 
-
+  <br />
   <hr />
 
   <?php
   ?>
 
-
-
-  <hr />
 
 </body>
 

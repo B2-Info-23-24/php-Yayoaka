@@ -21,7 +21,7 @@ class FreeDateModel
     public function getNotFreeDates($date, $vehicle)
     {
         $queryContents = "SELECT date_begin, date_end FROM Reservation WHERE id_vehicle = " . $vehicle . " AND date_begin
-        LIKE '" . $date . "%' ORDER BY date_begin ASC";
+        LIKE '" . $date . "%' AND state=1 ORDER BY date_begin ASC";
 
         $tNotFreeDates = array();
 
