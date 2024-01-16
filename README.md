@@ -31,20 +31,19 @@ Fonctionne sur les brands, colors, places, avis(partiellment), vehicules
 Provide step-by-step instructions on how to install your project.
 
 ## Installation des scripts
-Télécharger et installer Laragon.
-Télécharger le zip du projet l'extraire dans le dossier www de laragon. 
+- Télécharger et installer Laragon.
+- Télécharger le zip du projet l'extraire dans le dossier www de laragon. 
 
 
 ## Initialisation Database
 Près de l'horloge, ouvrez le panneau des programmes en arrière plan.
-Faites clique droit sur Laragon et selectionnez le menu MySQL puis HeidiSQL.
-Cliquez sur [Ouvrir], puis faites clique droit tout en haut de l'arborescence, puis selectionnez Créer un nouvelle > base de données
-Saisir un nom de base de données et cliquez sur OK.
-Selectionnez votre base de données, puis importer les données dans votre database, en utilisant le menu Fichier > Executer un fichier sql
-Selectionné le fichier : C:\laragon\www\php-Yayoaka\src\App\Core\database.sql , puis cliquez sur [Ouvrir]
+- Faites clique droit sur Laragon et selectionnez le menu MySQL puis HeidiSQL.
+- Cliquez sur [Ouvrir], puis faites clique droit tout en haut de l'arborescence, puis selectionnez Créer un nouvelle > base de données
+- Saisir un nom de base de données et cliquez sur OK.
+- Selectionnez votre base de données, puis importer les données dans votre database, en utilisant le menu Fichier > Executer un fichier sql
+- Selectionné le fichier : C:\laragon\www\php-Yayoaka\src\App\Core\database.sql , puis cliquez sur [Ouvrir]
 
-- Ensuite pour se connecter a la base de donnée il vous faudra :
-renseigner le nom de la bdd dans le script src/publicAction.php à la ligne 43  :
+- Ensuite pour se connecter a la base de donnée il vous faudra renseigner le nom de la bdd dans le script src/publicAction.php à la ligne 43  :
 
   `$pdo = $config->connectDB("mydatabasename");`
 
