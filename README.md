@@ -28,16 +28,23 @@ Fonctionne sur les brands, colors, places, avis(partiellment), vehicules
 
 
 # Installation
-
 Provide step-by-step instructions on how to install your project.
 
-Clone repo sur votre serveur puis importer les données de src/app/core/database.sql dans votre database
-pour avoir les tables et des données préconfigurés comme deux user, le premier à le grade admin qui lui permet d'utiliser le panel admin 
-avec l'identifiant lucas et le mot de passe aaaa et le second user permet de tester le site sans le grade admin 
-avec l'identifiant user et mot de passe aaa
+## Installation des scripts
+Télécharger et installer Laragon.
+Télécharger le zip du projet l'extraire dans le dossier www de laragon. 
+
+
+## Initialisation Database
+Près de l'horloge, ouvrez le panneau des programmes en arrière plan.
+Faites clique droit sur Laragon et selectionnez le menu MySQL puis HeidiSQL.
+Cliquez sur [Ouvrir], puis faites clique droit tout en haut de l'arborescence, puis selectionnez Créer un nouvelle > base de données
+Saisir un nom de base de données et cliquez sur OK.
+Selectionnez votre base de données, puis importer les données dans votre database, en utilisant le menu Fichier > Executer un fichier sql
+Selectionné le fichier : C:\laragon\www\php-Yayoaka\src\App\Core\database.sql , puis cliquez sur [Ouvrir]
 
 - Ensuite pour se connecter a la base de donnée il vous faudra :
-renseigner le nom de la bdd dans :
+renseigner le nom de la bdd dans le script src/publicAction.php à la ligne 43  :
 
   `$pdo = $config->connectDB("mydatabasename");`
 
@@ -50,13 +57,15 @@ renseigner le nom de la bdd dans :
 
 # Getting Started
 how to get your project up and running.
+http://localhost/php-Yayoaka/src/public
 
 lancer votre serveur et naviguer jusqu'a l'url du site
 
 # Prerequisites
-aucun
+Logiciel Laragon installé et démarré
 
 # Usage
+
 
 ## Menu Header :
 - Home : retour a la page d'accueil
@@ -72,7 +81,6 @@ aucun
 - add en favori un véhicule (connecté)
 
 ![image](https://github.com/B2-Info-23-24/php-Yayoaka/assets/76622183/2a5a5ae4-67ea-422d-bf32-dde2ca461b23)
-
 
 
 ## produit :
@@ -98,3 +106,7 @@ payer les reservations de location vehicule
 
 ## Admin :
 Gestion complete (CRUD) des brand / color / place / vehicule / avis(partial) / user
+
+Les données de comptes utilisateur préconfigurés contiennent deux user, le premier à le grade admin qui lui permet d'utiliser le panel admin 
+avec l'identifiant lucas et le mot de passe aaaa et le second user permet de tester le site sans le grade admin 
+avec l'identifiant user et mot de passe aaa
